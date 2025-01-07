@@ -11,7 +11,7 @@ typedef struct transaction {
 	unsigned int to_id;
 	char location[32];
 } transaction;
-//print location&time("DD:MM:YYYY HH:MM:SS")of transaction with lowest amount
+//print time("DD:MM:YYYY HH:MM:SS format")of transaction with lowest amount
 int lowest(transaction transactions[], int len)
 {
 	int min_index = 0, i;
@@ -26,10 +26,12 @@ int lowest(transaction transactions[], int len)
 int main(int argc, char *argv[])
 {
 	int fd, len, j, min_index, i;
+	char *filename;
 
+	filename = "data.dat";
 	len = 0;
 
-	fd = open(argv[1], O_RDONLY);
+	fd = open(filename, O_RDONLY);
 	if (fd == -1) {
 		printf("Open Failed\n");
 		return 1;
@@ -41,7 +43,6 @@ int main(int argc, char *argv[])
 	for (j = 0; j < len; j++)
 		read(fd, &transactions[j], sizeof(transaction));
 	min_index = lowest(transactions, len);
-	printf("%s ", transactions[min_index].location);
 
 	char file_time[32];
 
@@ -76,7 +77,11 @@ int main(int argc, char *argv[])
 	strncpy(hour, &file_time[11], 2);
 	hour[2] = '\0';
 	hr = atoi(hour);
+	int new_hr;
 
+	new_hr = hr;
+	if (hr > 12)
+		new_hr = hr - 12;
 	strncpy(minute, &file_time[14], 2);
 	minute[2] = '\0';
 	min = atoi(minute);
@@ -91,8 +96,8 @@ int main(int argc, char *argv[])
 	yr = atoi(year);
 
 	// print in DD:MM:YYYY HH:MM:SS format
-	printf("%02d/%02d/%04d %02d:%02d:%02d\n", day,
-	       num_month, yr, hr, min, sec);
+	printf("%02d:%02d:%04d %02d:%02d:%02d\n", day,
+	       num_month, yr, new_hr, min, sec);
 	close(fd);
 	return 0;
 }
