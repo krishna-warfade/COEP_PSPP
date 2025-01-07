@@ -8,18 +8,19 @@ struct course {
 	char category[16];
 };
 
-int main(void)
+int main()
 {
-	int i, sum_all, sum_lab, sum_theory, num_courses, sum[8] = {0};
+	int i, sum_all, sum_lab, sum_theory, num_courses, sum[8] = {0}, valid;
 
 	i = 0;
+	valid = 0;
 	sum_all = 0;
 	sum_lab = 0;
 	sum_theory = 0;
 	num_courses = 0;
 
 	struct course course[128];
-	char *categories[6] = {"PCC", "HSSC", "LL", "LLC", "OE", "DE"};
+	char *categories[6] = {"PCC", "HSSC", "LC", "LLC", "OE", "DE"};
 
 	while (scanf("%s %s %d %d %s",
 		     course[num_courses].name,
@@ -27,20 +28,20 @@ int main(void)
 		     &course[num_courses].credits,
 		     &course[num_courses].type,
 		     course[num_courses].category) == 5) {
-		if (course[num_courses].type != 1 &&
-		    course[num_courses].type != 2 &&
-		    course[num_courses].type != 3) {
+		if (course[num_courses].type < 1 || course[num_courses].type > 3) {
 			printf("invalid type\n");
 			break;
 		}
-		if (strcmp(course[num_courses].category, "PCC") != 0 &&
-		    strcmp(course[num_courses].category, "HSSC") != 0 &&
-		    strcmp(course[num_courses].category, "LL") != 0 &&
-		    strcmp(course[num_courses].category, "LLC") != 0 &&
-		    strcmp(course[num_courses].category, "OE") != 0 &&
-		    strcmp(course[num_courses].category, "DE") != 0) {
-			printf("invalid category\n");
-			break;
+		valid = 0;
+		for (int k = 0; k < 6; k++) {
+		    if (strcmp(course[num_courses].category, categories[k]) == 0) {
+		        valid = 1;
+		        break;
+	    	}
+		}
+		if (valid != 1) {
+		    printf("invalid category\n");
+		    break;
 		}
 		sum_all += course[num_courses].credits;
 
