@@ -5,14 +5,15 @@
 int main(int argc, char *argv[])
 {
 	int fd, chars, words, lines, flag;
-	char ch;
+	char ch, filename[128];
 
 	fd = 0;
 	chars = 0;
 	words = 0;
 	lines = 0;
 	flag = 0;
-	fd = open(argv[1], O_RDONLY);
+	scanf("%s", filename);
+	fd = open(filename, O_RDONLY);
 	if (fd == -1) {
 		printf("File not opened\n");
 		return 1;
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
 	if (ch != '\n' && ch)
 		++lines;
 
-	printf("%d %d %d %s\n", chars, words, lines, argv[1]);
+	printf("%d %d %d %s\n", lines, words, chars, filename);
 	close(fd);
 	return 0;
 }
