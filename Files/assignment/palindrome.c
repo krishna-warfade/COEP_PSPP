@@ -3,6 +3,12 @@
 #include <string.h>
 #include <unistd.h>
 
+char make_lower(char ch)
+{	if (ch >= 'A' && ch <= 'Z')
+		return ch + 32;
+ 	return ch;
+}
+
 int is_pal(char const *word)
 {
 	int len, i;
@@ -12,7 +18,7 @@ int is_pal(char const *word)
 		return 1;
 
 	for (i = 0; i < len / 2; i++) {
-		if (word[i] != word[len - i - 1])
+		if (make_lower((word[i])) != make_lower(word[len - i - 1]))
 			return 0;
 		else if (word[i] == ' ' || word[i] == '\n' || word[i] == '\t')
 			i++;
@@ -20,18 +26,19 @@ int is_pal(char const *word)
 	return 1;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
 	int fd, i = 0;
-	char data[128], ch;
+	char data[256], ch, filename[128];
 
-	fd = open(argv[1], O_RDONLY);
+    scanf("%s", filename);
+	fd = open(filename, O_RDONLY);
 	if (fd == -1) {
 		printf("open failed\n");
 		return 1;
 	}
 	while (read(fd, &ch, 1)) {
-		if (ch == '\n' || ch == ' ' || ch == '\t' || ch == ',') {
+		if (ch == ' ' || ch == '\n' || ch == '\t') {
 			data[i] = '\0'; // null terminating prev. word
 			if (is_pal(data))
 				printf("%s\n", data);
@@ -40,6 +47,10 @@ int main(int argc, char *argv[])
 			data[i] = ch;
 			i++;
 		}
+	}
+    close(fd);
+	return 0;
+}
 	}
 	close(fd);
 	return 0;
