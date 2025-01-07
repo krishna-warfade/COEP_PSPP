@@ -31,15 +31,16 @@ int myscanf(char *format, void *arg)
 				ch = getchar();
 				i++;
 			}
+			
+			if (i > 0) {
+                *(int *)p = sign * num;
+                conv++;
+            } else {
+                return 0;
+            }
 			if (ch == EOF) {
-				*(int *)p = num;
 				return -1;
-			} else if (num) {
-				*(int *)p = sign * num;
-				conv++;
-			} else {
-				return 0;
-			}
+            }
 		} else if (*format == 'u') {
 			ch = getchar();
 
