@@ -7,7 +7,6 @@ struct course {
 	int type; //type=1 is theory course,2 is lab course&3 is tutorial course
 	char category[16];
 };
-
 int main()
 {
 	int i, sum_all, sum_lab, sum_theory, num_courses, sum[8] = {0}, valid;
@@ -28,36 +27,25 @@ int main()
 		     &course[num_courses].credits,
 		     &course[num_courses].type,
 		     course[num_courses].category) == 5) {
-		if (course[num_courses].type < 1 || course[num_courses].type > 3) {
-			printf("invalid type\n");
-			break;
+			valid = 0;
+		for (int j = 0; j < 6; j++) {
+			if (strcmp(categories[j], course[num_courses].category) == 0) {
+				sum[j] += course[num_courses].credits;
+				valid = 1;
+				break;
+			}
 		}
-		valid = 0;
-		for (int k = 0; k < 6; k++) {
-		    if (strcmp(course[num_courses].category, categories[k]) == 0) {
-		        valid = 1;
-		        break;
-	    	}
-		}
+			
 		if (valid != 1) {
 		    printf("invalid category\n");
-		    break;
+		    return 1;
 		}
 		sum_all += course[num_courses].credits;
 
-		if (course[num_courses].type == 2)
+		if (course[num_courses].type == 2) {
 			sum_lab += course[num_courses].credits;
-		if (course[num_courses].type == 1)
+		} else if (course[num_courses].type == 1) {
 			sum_theory += course[num_courses].credits;
-
-		for (int j = 0; j < 6; j++) {
-			int x;
-
-			x = strcmp(categories[j], course[num_courses].category);
-			if (x == 0) {
-				sum[j] = sum[j] + course[num_courses].credits;
-				break;
-			}
 		}
 		num_courses++;
 	}
