@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 char make_lower(char ch)
@@ -19,12 +20,13 @@ int is_pal(char *word)
 
 	for (i = 0; i < len / 2; i++) {
 	    if (word[i] == ' ' || word[i] == '\n' || word[i] == '\t') {
-			i++;
+			return 0;
 		} else if (make_lower((word[i])) != make_lower(word[len - i - 1])) {
 			return 0;
 	    }
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 
 int main()
