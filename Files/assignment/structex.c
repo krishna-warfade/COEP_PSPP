@@ -9,17 +9,17 @@ struct course {
 };
 int main()
 {
-	int i, sum_all, sum_lab, sum_theory, num_courses, sum[8] = {0}, valid;
+	struct course course[128];
+	char *categories[6] = {"PCC", "HSSC", "LC", "LLC", "OE", "DE"};
+	int i, sum_all, sum_lab, sum_theory, num_courses, sum[8], valid;
 
 	i = 0;
 	valid = 0;
 	sum_all = 0;
 	sum_lab = 0;
 	sum_theory = 0;
+	sum_credits[8] = {0};
 	num_courses = 0;
-
-	struct course course[128];
-	char *categories[6] = {"PCC", "HSSC", "LC", "LLC", "OE", "DE"};
 
 	while (scanf("%s %s %d %d %s",
 		     course[num_courses].name,
@@ -30,7 +30,7 @@ int main()
 			valid = 0;
 		for (int j = 0; j < 6; j++) {
 			if (strcmp(categories[j], course[num_courses].category) == 0) {
-				sum[j] += course[num_courses].credits;
+				sum_credits[j] += course[num_courses].credits;
 				valid = 1;
 				break;
 			}
@@ -51,13 +51,14 @@ int main()
 	}
 
 	//Print(a)Sum of credits of all courses(b)-"-credits of all lab courses
-	printf("%d\n%d\n", sum_all, sum_lab);
+	printf("%d\n", sum_all);
+	printf("%d\n", sum_lab);
 	//Print : (c) sum of credits for all theory courses, category wise
 	// edge case : if input contains 2 same categories
 
-	for (i = 0; i < num_courses; i++) {
-		if (sum[i] > 0)
-			printf("%s %d\n", course[i].category, sum[i]);
+	for (i = 0; i < 6; i++) {
+		if (sum_credits[i] > 0)
+			printf("%s %d\n", course[i].category, sum_credits[i]);
 	}
 	return 0;
 }
