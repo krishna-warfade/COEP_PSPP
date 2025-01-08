@@ -11,14 +11,14 @@ int main()
 {
 	struct course course[128];
 	char *categories[6] = {"PCC", "HSSC", "LC", "LLC", "OE", "DE"};
-	int i, sum_all, sum_lab, sum_theory, num_courses, sum[8], valid;
+	int	sum_credits[6] = {0};
+	int i, sum_all, sum_lab, sum_theory, num_courses, valid;
 
 	i = 0;
 	valid = 0;
 	sum_all = 0;
 	sum_lab = 0;
 	sum_theory = 0;
-	sum_credits[8] = {0};
 	num_courses = 0;
 
 	while (scanf("%s %s %d %d %s",
@@ -57,8 +57,7 @@ int main()
 	// edge case : if input contains 2 same categories
 
 	for (i = 0; i < 6; i++) {
-		if (sum_credits[i] > 0)
-			printf("%s %d\n", course[i].category, sum_credits[i]);
+			printf("%s %d\n", categories[i], sum_credits[i]);
 	}
 	return 0;
 }
