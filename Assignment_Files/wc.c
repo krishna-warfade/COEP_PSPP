@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
-
 int main(int argc, char *argv[])
 {
 	int fd, chars, words, lines, flag;
@@ -20,10 +19,8 @@ int main(int argc, char *argv[])
 	}
 	while (read(fd, &ch, 1)) {
 		++chars;
-
 		if (ch == '\n')
 			++lines;
-
 		if (ch == ' ' || ch == '\t' || ch == '\n') {
 			flag = 0;
 		} else if (flag == 0) {
