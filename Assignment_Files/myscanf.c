@@ -38,8 +38,8 @@ int myscanf(char *format, void *arg)
             } else {
                 return 0;
             }
-			if (ch == EOF) {
-				return -1;
+			if (ch != EOF) {
+                ungetc(ch, stdin);
             }
 		} else if (*format == 'u') {
 			ch = getchar();
@@ -57,15 +57,15 @@ int myscanf(char *format, void *arg)
 				ch = getchar();
 				i++;
 			}
-			if (ch == EOF) {
+			if (i > 0) {
 				*(unsigned int *)p = num;
-				return -1;
-			} else if (num) {
-				*(unsigned int *)p = (unsigned int)num;
 				conv++;
 			} else {
 				return 0;
 			}
+			if (ch != EOF) {
+                ungetc(ch, stdin);
+            }
 		} else if (*format == 'c') {
 			ch = getchar();
 			if (ch == EOF) {
@@ -89,14 +89,14 @@ int myscanf(char *format, void *arg)
 			float float_num;
 
 			float_num = atof(num);
-			if (ch == EOF) {
-				*(float *)p = float_num;
-				return -1;
-			} else if (float_num) {
+			if (j > 0) {
 				*(float *)p = float_num;
 				conv++;
 			} else
 				return 0;
+			if (ch != EOF) {
+                ungetc(ch, stdin);
+            }
 		} else if (*format == 'l' && *(format + 1) == 'f') {
 			char num[128];
 			int j = 0;
@@ -113,14 +113,14 @@ int myscanf(char *format, void *arg)
 			double double_num;
 
 			double_num = atof(num);
-			if (ch == EOF) {
-				*(double *)p = double_num;
-				return -1;
-			} else if (double_num) {
+			if (j > 0) {
 				*(double *)p = double_num;
 				conv++;
 			} else
 				return 0;
+			if (ch != EOF) {
+                ungetc(ch, stdin);
+            }
 		} else if (*format == 's') {
 			char str[1024];
 			int j = 0;
@@ -134,11 +134,11 @@ int myscanf(char *format, void *arg)
 				ch = getchar();
 			}
 			str[j] = '\0';
-			if (ch == EOF) {
-				return -1;
-			} else {
+			if (j > 0) {
 				strcpy((char *)p, str);
 				conv++;
+			} else  {
+				return 0;
 			}
 		}
 	}
