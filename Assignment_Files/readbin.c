@@ -47,7 +47,7 @@ int main()
 	char file_time[128];
 
     time = gmtime(&transactions[min_index].time);
-    strftime(file_time, 128, "%d:%m:%Y %H:%M:%S", time);
+    strftime(file_time, 128, "%d:%m:%Y %H:%M:%S", time);// Y-fullyr(4dig), y-last2dig, H-24hr-frmt
     printf("%s\n", file_time);
     close(fd);
     return 0;
@@ -107,5 +107,4 @@ char hour[3], minute[3], second[3];
 	       num_month, yr, new_hr, min, sec);
 	close(fd);
 	return 0;
-}
-*/
+}*/
