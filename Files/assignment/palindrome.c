@@ -9,7 +9,7 @@ char make_lower(char ch)
  	return ch;
 }
 
-int is_pal(char const *word)
+int is_pal(char *word)
 {
 	int len, i;
 
@@ -18,10 +18,11 @@ int is_pal(char const *word)
 		return 1;
 
 	for (i = 0; i < len / 2; i++) {
-		if (make_lower((word[i])) != make_lower(word[len - i - 1]))
-			return 0;
-		else if (word[i] == ' ' || word[i] == '\n' || word[i] == '\t')
+	    if (word[i] == ' ' || word[i] == '\n' || word[i] == '\t') {
 			i++;
+		} else if (make_lower((word[i])) != make_lower(word[len - i - 1])) {
+			return 0;
+	    }
 	}
 	return 1;
 }
@@ -47,6 +48,12 @@ int main()
 			data[i] = ch;
 			i++;
 		}
+	}
+	if (i > 0) {
+	    data[i] = '\0';
+	    if (is_pal(data)) {
+	        printf("%s\n", data);
+	    }
 	}
     close(fd);
 	return 0;
