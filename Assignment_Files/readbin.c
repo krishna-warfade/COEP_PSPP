@@ -23,14 +23,13 @@ int lowest(transaction transactions[], int len)
 	return min_index;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
-	int fd, len, j, min_index, i;
-	char *filename;
+	int fd, len, j, min_index;
+	char filename[128];
 
-	filename = "data.dat";
 	len = 0;
-
+    scanf("%s", filename);
 	fd = open(filename, O_RDONLY);
 	if (fd == -1) {
 		printf("Open Failed\n");
@@ -44,9 +43,16 @@ int main(int argc, char *argv[])
 		read(fd, &transactions[j], sizeof(transaction));
 	min_index = lowest(transactions, len);
 
-	char file_time[32];
+    struct tm *time;
+	char file_time[128];
 
-	strncpy(file_time, ctime(&transactions[min_index].time),
+    time = gmtime(&transactions[min_index].time);
+    strftime(file_time, 128, "%d:%m:%Y %H:%M:%S", time);
+    printf("%s\n", file_time);
+    close(fd);
+    return 0;
+}
+	/*strncpy(file_time, ctime(),
 		sizeof(file_time));
 
 	char *months[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
@@ -72,7 +78,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 	}
-	char hour[3], minute[3], second[3];
+char hour[3], minute[3], second[3];
 
 	strncpy(hour, &file_time[11], 2);
 	hour[2] = '\0';
@@ -80,8 +86,9 @@ int main(int argc, char *argv[])
 	int new_hr;
 
 	new_hr = hr;
-	if (hr > 12)
-		new_hr = hr - 12;
+//	if (hr > 12) {
+//		new_hr = hr - 05;
+//	}
 	strncpy(minute, &file_time[14], 2);
 	minute[2] = '\0';
 	min = atoi(minute);
@@ -101,3 +108,4 @@ int main(int argc, char *argv[])
 	close(fd);
 	return 0;
 }
+*/
