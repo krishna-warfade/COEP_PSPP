@@ -181,7 +181,7 @@ void print_grade_all(grade grades[], subject subjects[], mark *marks, int marks_
 			char *grd;
 
 			Marks = marks[i].sub_marks[j];
-			if (Marks >= 0.00 && Marks <= 36.00) {
+			/*if (Marks >= 0.00 && Marks <= 36.00) {
 				grd = "FF";
 			} else if (Marks >= 36.01 && Marks <= 51.00) {
 				grd = "DD";
@@ -197,7 +197,7 @@ void print_grade_all(grade grades[], subject subjects[], mark *marks, int marks_
 				grd = "AB";
 			} else if (Marks >= 88.01 && Marks <= 100.00) {
 				grd = "AA";
-			}
+			}*/
 			printf(", %s", grd);
 		}
 		printf("\n");
