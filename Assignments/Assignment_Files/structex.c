@@ -49,13 +49,14 @@ int main() {
 		}
 		num_courses++;
 	}
-
 	//Print(a)Sum of credits of all courses(b)-"-credits of all lab courses
+	
 	printf("%d\n", sum_all);
 	printf("%d\n", sum_lab);
+	
 	//Print : (c) sum of credits for all theory courses, category wise
-	//edge case : if input contains 2 same categories
-
+	//edge case : if input contains 2 same categories - add it under same category
+	
 	for (i = 0; i < 6; i++) {
 			printf("%s %d\n", categories[i], sum_credits[i]);
 	}
