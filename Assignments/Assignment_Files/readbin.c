@@ -52,6 +52,7 @@ int main()
     close(fd);
     return 0;
 }
+
 	/*strncpy(file_time, ctime(),
 		sizeof(file_time));
 
@@ -86,9 +87,6 @@ char hour[3], minute[3], second[3];
 	int new_hr;
 
 	new_hr = hr;
-//	if (hr > 12) {
-//		new_hr = hr - 05;
-//	}
 	strncpy(minute, &file_time[14], 2);
 	minute[2] = '\0';
 	min = atoi(minute);
