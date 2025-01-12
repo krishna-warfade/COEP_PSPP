@@ -1,3 +1,7 @@
+/*Sort on mis number
+ *To sort on name on dictionary(alpha) order, use [if (strcmp(a[i].name , a[i + 1].name)) > 0]
+ */
+
 #include <stdio.h>
 #define SIZE 16
 struct student {
@@ -10,30 +14,28 @@ void print_records(student a[], int len) {
 	int i;
 	printf("-------------\n");
 	for(i = 0; i < len; i++)
-		printf("%d %s %.2f\n", a[i].mis,
-			a[i].name, a[i].marks);
+		printf("%d %s %.2f\n", a[i].mis, a[i].name, a[i].marks);
 }
 void bubblesort(student a[], int len) {
 	int i, j;
 	student t;
 	for(j = 0; j < len - 1; j++) {
-			i = 0;
-			while(i < len - j - 1) {
-				if(a[i].mis > a[i + 1].mis) {
-					t = a[i];
-					a[i] =a[i + 1];
-					a[i + 1] = t;
-				}
-				i++;
+		i = 0;
+		while(i < len - j - 1) {
+			if(a[i].mis > a[i + 1].mis) {
+				t = a[i];
+				a[i] =a[i + 1];
+				a[i + 1] = t;
 			}
+			i++;
+		}
 	}
 }
 int main() {
 	student a[SIZE];
 	int len = 0;
 	int mis, ret;	
-	while(len < SIZE && scanf("%d%s%f", &a[len].mis, 
-			a[len].name, &a[len].marks) == 3)
+	while(len < SIZE && scanf("%d%s%f", &a[len].mis, a[len].name, &a[len].marks) == 3)
 		len++;
 	print_records(a, len);
 	bubblesort(a, len);
