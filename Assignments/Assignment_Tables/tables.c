@@ -314,7 +314,9 @@ int main()
 		switch (retval_cmd) {
 			case GRADE :
 				scanf("%s", data1);
-				if (strcmp(data1, "all") == 0) {
+				if (strcmp(data1, "all") != 0) {
+					
+				} else {
 					printf("Executing GRADE_ALL...\n");
 					print_grade_all(marks, marks_len, sub_len);
 				}
