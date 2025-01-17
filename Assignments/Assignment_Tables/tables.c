@@ -23,17 +23,18 @@ typedef struct mark{
 
 enum Commands {GRADE, EXIT};
 
-/*int interpret_cmd(char *cmd);
+int interpret_cmd(char *cmd);
 void insert_sub(char *line, subject subjects[], int i);
 void insert_grade(char *line, grade grades[], int i);
 void insert_mark(char *line, mark *marks, int i, int sub_len);
-int readline(int fd, char *data, int size);
+int readline(int fd, char *s);
 int read_subjects(char *filename, subject subjects[]);
 int read_grades(char *filename, grade grades[], int sub_len);
 int read_marks(char *filename, mark *marks, int sub_len);
-void print_grade_all(grade grades[], subject subjects[], mark *marks, int marks_len, int sub_len);
+void print_grade_all(mark *marks, int i, int j);
 void print_grade_student(grade grades[], subject subjects[], mark *marks, int marks_len, int sub_len, long data1, char *data2);
-int subject_index(subject subjects[], char *subject, int sub_len);*/
+int subject_index(subject subjects[], char *subject, int sub_len);
+int mis_index(mark *marks, long misid, int len);
 int interpret_cmd(char cmd[]) {
 	if (strcmp(cmd, "grade") == 0) return GRADE;
 	//if (strcmp(cmd, "grade ") == 0) return GRADE_STUDENT;
@@ -233,7 +234,7 @@ void assign_grades(mark *marks, int j, int k)
 }
 
 //**********************************************//
-void print_grade_all (mark *marks, int i, int j)
+void print_grade_all(mark *marks, int i, int j)
 {
 	int p, q;
 
@@ -245,6 +246,16 @@ void print_grade_all (mark *marks, int i, int j)
 		}
 		printf("\n");
 	}
+}
+void print_student_mis_grade(mark *marks, subject subjects[], long mis, char *data2, int marks_len, int sub_len)
+{
+	int mis_ind, sub_ind;
+
+	mis_ind = mis_index(marks, mis, marks_len);
+	sub_ind = subject_index(subjects, data2, sub_len);
+	assign_grades(marks, mis_ind, sub_ind);
+	if (mis_ind == -1 || sub_ind == -1) printf("----------invalid input------------\n");
+	printf("\n");
 }
 //**********************************************//
 int subject_index(subject subjects[], char *subject, int sub_len) {
@@ -314,8 +325,11 @@ int main()
 		switch (retval_cmd) {
 			case GRADE :
 				scanf("%s", data1);
+				printf("parsed data1: '%s'\n", data1);
 				if (strcmp(data1, "all") != 0) {
-					
+					scanf("%s", data2);
+					long mis = atol(data1);
+					print_student_mis_grade(marks, subjects, mis, data2, marks_len, sub_len);
 				} else {
 					printf("Executing GRADE_ALL...\n");
 					print_grade_all(marks, marks_len, sub_len);
@@ -336,4 +350,3 @@ int main()
 	}
 	return 0;
 }
-
