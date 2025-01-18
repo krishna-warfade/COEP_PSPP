@@ -1,1 +1,1 @@
-Made while learning C in SEM 1
+Made while learning C in SEM 1.
