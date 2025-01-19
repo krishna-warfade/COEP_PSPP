@@ -48,7 +48,7 @@ int readline(int fd, char *s)
 	while (((s - p) < SIZE - 1) && (read(fd, s, 1) == 1) && (*s != '\n'))
 		s++;
 	*s = '\0';
-	return (s - p);
+	return (s - p); // returns length of line
 }
 //**********************************************//
 void insert_sub(char line[], subject subjects[], int i)
