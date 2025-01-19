@@ -5,6 +5,6 @@ int main()
 
 	scanf(" %f %f", &ip, &dr);
 	fp = (ip - ((ip * dr) / 100));
-	printf("%.2f", fp);
+	printf("%.2f\n", fp);
 	return 0;
 }
