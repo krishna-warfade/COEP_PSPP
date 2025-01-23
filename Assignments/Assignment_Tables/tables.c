@@ -21,7 +21,7 @@ typedef struct mark{
 	int *point;
 }mark;
 
-enum Commands {GRADE, EXIT};
+enum Commands {GRADE, CGPA, SGPA, EXIT};
 
 int interpret_cmd(char *cmd);
 void insert_sub(char *line, subject subjects[], int i);
@@ -35,11 +35,15 @@ void print_grade_all(mark *marks, int i, int j);
 void print_grade_student(grade grades[], subject subjects[], mark *marks, int marks_len, int sub_len, long data1, char *data2);
 int subject_index(subject subjects[], char *subject, int sub_len);
 int mis_index(mark *marks, long misid, int len);
+double find_cgpa(mark *marks, subject subjects[], int sub_len, int marks_len, long mis);
+double find_sgpa(mark *marks, subject subjects[], long mis, int marks_len, int sub_len, int semester);
+int credits(subject subjects[], int sub_len, int semester);
+
 int interpret_cmd(char cmd[]) {
 	if (strcmp(cmd, "grade") == 0) return GRADE;
-	//if (strcmp(cmd, "grade ") == 0) return GRADE_STUDENT;
+	if (strcmp(cmd, "cgpa") == 0) return CGPA;
+	if (strcmp(cmd, "sgpa") == 0) return SGPA;
 	if (strcmp(cmd, "exit") == 0) return EXIT;
-	//return INVALID_CMD;
 	return -1;
 }
 int readline(int fd, char *s)
@@ -48,7 +52,7 @@ int readline(int fd, char *s)
 	while (((s - p) < SIZE - 1) && (read(fd, s, 1) == 1) && (*s != '\n'))
 		s++;
 	*s = '\0';
-	return (s - p); // returns length of line
+	return (s - p);
 }
 //**********************************************//
 void insert_sub(char line[], subject subjects[], int i)
@@ -258,6 +262,43 @@ void print_student_mis_grade(mark *marks, subject subjects[], long mis, char *da
 	printf("\n");
 }
 //**********************************************//
+double find_sgpa(mark *marks, subject subjects[], long mis, int marks_len, int sub_len, int semester)
+{
+	int found, total_cred = 0;
+
+	float sum = 0, sgpa = 0.0;
+
+	found = mis_index(marks, mis, marks_len);
+	if (found == -1) {
+		printf("invalid mis\n");
+		return found;
+	}
+	for (int i = 0; i < sub_len; i++) {
+		if (subjects[i].semester == semester) {
+			total_cred += subjects[i].credits;
+			sum += subjects[i].credits * marks[found].point[i];
+		}
+	}
+	sgpa = (float)(sum / total_cred);
+	return sgpa;
+}
+
+double find_cgpa(mark *marks, subject subjects[], int sub_len, int marks_len, long mis)
+{
+	int totalCredits = 0, credit;
+	double sum = 0.0, sgpa, cgpa = 0.0;
+
+	for (int i = 1; i < 8; i++) {
+		credit = credits(subjects, sub_len, i);//i is the semester which is updated in every iteration
+		sgpa = find_sgpa(marks, subjects, mis, marks_len, sub_len, i);
+		if (sgpa == -1) break;
+		sum += (credit * sgpa);
+		totalCredits += credit;
+	}
+	cgpa = (float)(sum / totalCredits);
+	return cgpa;
+}
+//**********************************************//
 int subject_index(subject subjects[], char *subject, int sub_len) {
 	for (int i = 0; i < sub_len; i++) {
 		if (strcmp(subjects[i].sub_name, subject) == 0) {
@@ -277,14 +318,22 @@ int mis_index(mark *marks, long misid, int len)
 	}
 	return -1;
 }
+int credits(subject subjects[], int sub_len, int semester)
+{
+	int i, sum = 0;
 
+	for (i = 0; i < sub_len; i++) {
+		if (subjects[i].semester == semester) sum += subjects[i].credits;
+	}
+	return sum;
+}
 //**********************************************//
 
 int main()
 {
-	int sub_len;
-	int marks_len;
-	int grade_len;
+	int sub_len, marks_len, grade_len, semester;
+	long misid;
+	float cgpa, sgpa;
 
 	subject subjects[SIZESUB];
 	grade grades[1024];
@@ -316,7 +365,7 @@ int main()
 
 		printf(">");
 		scanf("%s", cmd);
-		printf("Parsed command: '%s'\n", cmd);
+		//printf("Parsed command: '%s'\n", cmd);
 		retval_cmd = interpret_cmd(cmd);
 
 		if (retval_cmd == EXIT)
@@ -325,7 +374,7 @@ int main()
 		switch (retval_cmd) {
 			case GRADE :
 				scanf("%s", data1);
-				printf("parsed data1: '%s'\n", data1);
+				//printf("parsed data1: '%s'\n", data1);
 				if (strcmp(data1, "all") != 0) {
 					scanf("%s", data2);
 					long mis = atol(data1);
@@ -335,8 +384,22 @@ int main()
 					print_grade_all(marks, marks_len, sub_len);
 				}
 				break;
+			case CGPA :
+				scanf("%s", data1);
+				misid = atol(data1);
+				cgpa = find_cgpa(marks, subjects, sub_len, marks_len, misid);
+				if (cgpa >= 0) printf("%.2f\n", cgpa);
+				break;
+			case SGPA :
+				scanf("%s", data1);
+				misid = atol(data1);
+				scanf("%s", data2);
+				semester = atoi(data2);
+				sgpa = find_sgpa(marks, subjects, misid, marks_len, sub_len, semester);
+				if (sgpa >= 0) printf("%.2f\n", sgpa);
+				break;
 			case EXIT :
-				printf("Exiting program...\n");
+				//printf("Exiting program...\n");
 				for (int i = 0; i < marks_len; i++)
 					free(marks[i].sub_marks);
 				return 0;
@@ -350,3 +413,4 @@ int main()
 	}
 	return 0;
 }
+
