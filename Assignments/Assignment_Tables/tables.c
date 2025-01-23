@@ -365,7 +365,6 @@ int main()
 
 		printf(">");
 		scanf("%s", cmd);
-		//printf("Parsed command: '%s'\n", cmd);
 		retval_cmd = interpret_cmd(cmd);
 
 		if (retval_cmd == EXIT)
@@ -374,7 +373,6 @@ int main()
 		switch (retval_cmd) {
 			case GRADE :
 				scanf("%s", data1);
-				//printf("parsed data1: '%s'\n", data1);
 				if (strcmp(data1, "all") != 0) {
 					scanf("%s", data2);
 					long mis = atol(data1);
@@ -399,12 +397,11 @@ int main()
 				if (sgpa >= 0) printf("%.2f\n", sgpa);
 				break;
 			case EXIT :
-				//printf("Exiting program...\n");
 				for (int i = 0; i < marks_len; i++)
 					free(marks[i].sub_marks);
 				return 0;
 			default :
-				printf("invalid command\n");
+				printf("Invalid command\n");
 		}
 	}
 
