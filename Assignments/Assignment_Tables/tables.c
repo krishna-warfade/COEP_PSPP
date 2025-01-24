@@ -44,8 +44,8 @@ int interpret_cmd(char cmd[]) {
 	if (strcmp(cmd, "grade") == 0) return GRADE;
 	if (strcmp(cmd, "cgpa") == 0) return CGPA;
 	if (strcmp(cmd, "sgpa") == 0) return SGPA;
-	if (strcmp(cmd, "exit") == 0) return EXIT;
 	if (strcmp(cmd, "failed") == 0) return FAILED;
+	if (strcmp(cmd, "exit") == 0) return EXIT;
 	return -1;
 }
 int readline(int fd, char *s)
