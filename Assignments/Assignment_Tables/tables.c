@@ -21,7 +21,7 @@ typedef struct mark{
 	int *point;
 }mark;
 
-enum Commands {GRADE, CGPA, SGPA, EXIT};
+enum Commands {GRADE, CGPA, SGPA, FAILED, TOPSEM, TOPSUB, TOPNSUB, FAILED, STDEV, EXIT};
 
 int interpret_cmd(char *cmd);
 void insert_sub(char *line, subject subjects[], int i);
@@ -340,17 +340,11 @@ int main()
 	mark marks[SIZEMARKS];
 	/*Reads the data from the 3 files
 	*Read Subjects */
-	printf("before rd sub\n");
 	sub_len = read_subjects("subjects.csv", subjects);
-	printf("after rd sub\n");
 	//Read Grades
-	printf("before rd grades\n");
 	grade_len = read_grades("grades.csv", grades, sub_len);
-	printf("after rd grades\n");
 	//Read Marks
-	printf("before rd marks\n");
 	marks_len = read_marks("marks.csv", marks, sub_len);
-	printf("after rd marks\n");
 
 	if (grade_len != sub_len) {
 		printf("no. of subjects & grades not matching\n");
@@ -373,6 +367,7 @@ int main()
 		switch (retval_cmd) {
 			case GRADE :
 				scanf("%s", data1);
+				//printf("parsed data1: '%s'\n", data1);
 				if (strcmp(data1, "all") != 0) {
 					scanf("%s", data2);
 					long mis = atol(data1);
@@ -401,7 +396,7 @@ int main()
 					free(marks[i].sub_marks);
 				return 0;
 			default :
-				printf("Invalid command\n");
+				printf("invalid command\n");
 		}
 	}
 
@@ -410,4 +405,3 @@ int main()
 	}
 	return 0;
 }
-
