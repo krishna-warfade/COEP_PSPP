@@ -21,7 +21,7 @@ typedef struct mark{
 	int *point;
 }mark;
 
-enum Commands {GRADE, CGPA, SGPA, FAILED, TOPSEM, TOPSUB, TOPNSUB, FAILED, STDEV, EXIT};
+enum Commands {GRADE, CGPA, SGPA, FAILED, TOPSEM, TOPSUB, TOPNSUB, STDEV, EXIT};
 
 int interpret_cmd(char *cmd);
 void insert_sub(char *line, subject subjects[], int i);
@@ -37,6 +37,7 @@ int subject_index(subject subjects[], char *subject, int sub_len);
 int mis_index(mark *marks, long misid, int len);
 double find_cgpa(mark *marks, subject subjects[], int sub_len, int marks_len, long mis);
 double find_sgpa(mark *marks, subject subjects[], long mis, int marks_len, int sub_len, int semester);
+void print_failed(mark *marks, grade grades[], subject subjects[], long mis, int marks_len, int sub_len);
 int credits(subject subjects[], int sub_len, int semester);
 
 int interpret_cmd(char cmd[]) {
@@ -44,6 +45,7 @@ int interpret_cmd(char cmd[]) {
 	if (strcmp(cmd, "cgpa") == 0) return CGPA;
 	if (strcmp(cmd, "sgpa") == 0) return SGPA;
 	if (strcmp(cmd, "exit") == 0) return EXIT;
+	if (strcmp(cmd, "failed") == 0) return FAILED;
 	return -1;
 }
 int readline(int fd, char *s)
@@ -264,19 +266,19 @@ void print_student_mis_grade(mark *marks, subject subjects[], long mis, char *da
 //**********************************************//
 double find_sgpa(mark *marks, subject subjects[], long mis, int marks_len, int sub_len, int semester)
 {
-	int found, total_cred = 0;
+	int found_mis, total_cred = 0;
 
 	float sum = 0, sgpa = 0.0;
 
-	found = mis_index(marks, mis, marks_len);
-	if (found == -1) {
+	found_mis = mis_index(marks, mis, marks_len);
+	if (found_mis == -1) {
 		printf("invalid mis\n");
-		return found;
+		return found_mis;
 	}
 	for (int i = 0; i < sub_len; i++) {
 		if (subjects[i].semester == semester) {
 			total_cred += subjects[i].credits;
-			sum += subjects[i].credits * marks[found].point[i];
+			sum += subjects[i].credits * marks[found_mis].point[i];
 		}
 	}
 	sgpa = (float)(sum / total_cred);
@@ -297,6 +299,21 @@ double find_cgpa(mark *marks, subject subjects[], int sub_len, int marks_len, lo
 	}
 	cgpa = (float)(sum / totalCredits);
 	return cgpa;
+}
+//**********************************************//
+void print_failed(mark *marks, grade grades[], subject subjects[], long mis, int marks_len, int sub_len)//failed means FF = 0 points
+{
+	int found_mis, i;
+
+	found_mis = mis_index(marks, mis, marks_len);
+	if (found_mis == -1) {
+		printf("invalid mis\n");
+		return;
+	}
+	for (i = 0; i < sub_len; i++) {
+		if (marks[found_mis].point[i] == 0) printf("%s ", subjects[i].sub_name);
+	}
+	printf("\n");
 }
 //**********************************************//
 int subject_index(subject subjects[], char *subject, int sub_len) {
@@ -390,6 +407,11 @@ int main()
 				semester = atoi(data2);
 				sgpa = find_sgpa(marks, subjects, misid, marks_len, sub_len, semester);
 				if (sgpa >= 0) printf("%.2f\n", sgpa);
+				break;
+			case FAILED :
+				scanf("%s", data1);
+				misid = atol(data1);
+				print_failed(marks, grades, subjects, misid, marks_len, sub_len);
 				break;
 			case EXIT :
 				for (int i = 0; i < marks_len; i++)
