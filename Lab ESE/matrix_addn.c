@@ -42,7 +42,7 @@ void insert_data(char *line, int *rows1, int *columns1, int i, int arr1[SIZE][SI
 	}
 }
 
-		/*READ FIRST FILE*/
+		/*READ FILE*/
 int readfile(char *filename, int *rows1, int *columns1, int arr1[SIZE][SIZE])
 {
 	int fd, n, i;
@@ -63,7 +63,7 @@ int readfile(char *filename, int *rows1, int *columns1, int arr1[SIZE][SIZE])
 	close(fd);
 	return i;
 }
-
+		/*PRINT ARRAY*/
 void print_array(int arr[SIZE][SIZE], int rows, int columns)
 {
 	for (int i = 0; i < rows; i++) {
@@ -72,7 +72,7 @@ void print_array(int arr[SIZE][SIZE], int rows, int columns)
 		printf("\n");
 	}
 }
-
+		/*FIND SUM OF 2 ARRAYS*/
 void find_sum(int arr1[SIZE][SIZE], int arr2[SIZE][SIZE], int sum[SIZE][SIZE], int rows, int columns)
 {
 	for (int i = 0; i < rows; i++) {
