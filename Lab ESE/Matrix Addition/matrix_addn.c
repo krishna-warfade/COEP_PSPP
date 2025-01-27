@@ -43,7 +43,6 @@ void insert_data(char *line, int *rows1, int *columns1, int i, int arr1[SIZE][SI
 		arr1[i][j] = atoi(token);
 	}
 }
-
 		/*READ FILE*/
 int readfile(char *filename, int *rows1, int *columns1, int arr1[SIZE][SIZE])
 {
@@ -96,31 +95,26 @@ int main(int argc, char *argv[])
 	int arr1[SIZE][SIZE], arr2[SIZE][SIZE], sum[SIZE][SIZE];
 
 	/*READ THE 2 FILES WHICH CONSIST OF MATRICES*/
-
 	readfile(argv[1], &rows1, &columns1, arr1);
 	readfile(argv[2], &rows2, &columns2, arr2);
 
 	/*PRINT THE 2 MATRICES, READ FROM THE FILE*/
-
 	print_array(arr1, rows1, columns1);
 	printf("----------------------\n");
 	print_array(arr2, rows2, columns2);
 
 	/*CHECK IF ADDITION IS COMPATIBLE*/
-
 	if (rows1 != rows2 || columns1 != columns2) {
 		printf("Addition not compatible\n\n");
 		return 1;
 	}
 
 	/*FUNCTION TO FIND SUM, IF ADDITION IS COMPATIBLE*/
-
 	find_sum(arr1, arr2, sum, rows1, columns1);
 	printf("----------------------\n");
 	printf("SUM IS :\n");
 
 	/*PRINT THE SUM OF 2 MATRICES*/
-
 	print_array(sum, rows1, columns1);
 
 	return 0;
