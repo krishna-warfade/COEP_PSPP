@@ -18,7 +18,7 @@ int readline(int fd, char *line, int size)
 	line[len] = '\0';
 	return len;
 }
-		/*FIND ORDER OF MATRIX(mxn)*/
+		/*FIND ORDER OF MATRIX (mxn)*/
 int insert_order(char *line, int *rows1, int *columns1)
 {
 	char *token;
