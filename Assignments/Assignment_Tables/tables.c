@@ -50,9 +50,6 @@ grade <mis> <subject-name>
   123123123, 123.23
   123212321, 123.45
 
-   failed  <mis>
-        Lists all subject names in which the student given by <mis> has failed
-
    stdev  <subject>
        prints the standard deviation of marks in the given subject, as a floating point upto 2 decimals
 
