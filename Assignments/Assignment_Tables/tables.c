@@ -1,8 +1,71 @@
+/*
+grade <mis> <subject-name>
+        e.g.
+       grade 11122312  os
+        Give the grade of the student specified by MIS id in <mis> for the subject in <subject-name>
+
+
+   grade all
+        Print the list of all students with grades in each subject, in CSV format
+        e.g. output will look like this
+        111212121, AA, BB, CC, DD, FF, AB, BC, BB, AB, AB
+        111212321, AB, BC, BC, CD, BB, AB, BC, BB, AB, BC
+        111211121, AB, BC, CD, DD, AB, BB, CC, BC, AB, AB
+
+
+    cgpa <mis>
+        e.g.
+        cgpa 11232132
+        Calculates and prints the CGPA of a student
+
+
+    sgpa  <MIS>  <sem>
+        e.g.
+   sgpa  1101010101 3
+        Calculates and prints the SGPA of a student in a given semester
+
+
+   failed  <mis>
+        Lists all subject names in which the student given by <mis> has failed
+
+  topsem  <sem>
+  Eg.
+  topsem 3
+  Lists the topmost student, in each subject, in semester 3, in this format:
+  112312321, pspp
+  123123123, os
+  123212321, dsa
+
+  topsub  <subject>
+  Eg.
+  topsub dsa
+  Lists the topper student MIS ID, in given subject,
+  112312321
+
+  topnsub  <sub> <n>
+  Eg.
+  topnsub pspp 5
+  Lists the topmost 5 students, in pspp subject, with marks in ascending order
+  112312321, 11.11
+  123123123, 123.23
+  123212321, 123.45
+
+   failed  <mis>
+        Lists all subject names in which the student given by <mis> has failed
+
+   stdev  <subject>
+       prints the standard deviation of marks in the given subject, as a floating point upto 2 decimals
+
+  exit
+       stop the program
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <math.h>
 #define SIZESUB 64
 #define	SIZEMARKS 1024
 #define	SIZE 512
@@ -35,16 +98,25 @@ void print_grade_all(mark *marks, int i, int j);
 void print_grade_student(grade grades[], subject subjects[], mark *marks, int marks_len, int sub_len, long data1, char *data2);
 int subject_index(subject subjects[], char *subject, int sub_len);
 int mis_index(mark *marks, long misid, int len);
+int check_sem(subject subjects[], int sub_len, int sem);
 double find_cgpa(mark *marks, subject subjects[], int sub_len, int marks_len, long mis);
 double find_sgpa(mark *marks, subject subjects[], long mis, int marks_len, int sub_len, int semester);
 void print_failed(mark *marks, grade grades[], subject subjects[], long mis, int marks_len, int sub_len);
 int credits(subject subjects[], int sub_len, int semester);
+float mean(mark *marks, int sub_len, int sub_ind);
+float rms(mark *marks, int sub_len, int sub_ind);
+float stdev(mark *marks, subject subjects[], char* subject, int marks_len, int sub_len);
+void find_topsem(mark *marks, subject subjects[], int sem, int marks_len, int sub_len);
+int find_topsub(mark *marks, subject subjects[], char *subject, int marks_len, int sub_len);
 
 int interpret_cmd(char cmd[]) {
 	if (strcmp(cmd, "grade") == 0) return GRADE;
 	if (strcmp(cmd, "cgpa") == 0) return CGPA;
 	if (strcmp(cmd, "sgpa") == 0) return SGPA;
 	if (strcmp(cmd, "failed") == 0) return FAILED;
+	if (strcmp(cmd, "stdev") == 0) return STDEV;
+	if (strcmp(cmd, "topsem") == 0) return TOPSEM;
+	if (strcmp(cmd, "topsub") == 0) return TOPSUB;
 	if (strcmp(cmd, "exit") == 0) return EXIT;
 	return -1;
 }
@@ -316,6 +388,37 @@ void print_failed(mark *marks, grade grades[], subject subjects[], long mis, int
 	printf("\n");
 }
 //**********************************************//
+float mean(mark *marks, int marks_len, int sub_ind)
+{
+	float avg, sum = 0.00;
+
+	for (int i = 0; i < marks_len; i++)
+		sum += marks[i].sub_marks[sub_ind];
+	avg = sum / marks_len;
+	return avg;
+}
+float rms(mark *marks, int marks_len, int sub_ind)
+{
+	float rms, sum = 0.00;
+
+	for (int i = 0; i < marks_len; i++)
+		sum += marks[i].sub_marks[sub_ind] * marks[i].sub_marks[sub_ind];
+	rms = sum / marks_len;
+	return rms;
+}
+float stdev(mark *marks, subject subjects[], char* sub, int marks_len, int sub_len)
+{
+	float stdev = 0.00, mean_value = 0.00, rms_value = 0.00;
+	int sub_ind;
+
+	sub_ind = subject_index(subjects, sub, sub_len);
+	if (sub_ind == -1) printf("invalid subject\n");
+	rms_value = rms(marks, marks_len, sub_ind);
+	mean_value = mean(marks, marks_len, sub_ind);
+	stdev = sqrt(rms_value - mean_value * mean_value);
+	return stdev;
+}
+//**********************************************//
 int subject_index(subject subjects[], char *subject, int sub_len) {
 	for (int i = 0; i < sub_len; i++) {
 		if (strcmp(subjects[i].sub_name, subject) == 0) {
@@ -344,13 +447,53 @@ int credits(subject subjects[], int sub_len, int semester)
 	}
 	return sum;
 }
+int check_sem(subject subjects[], int sub_len, int sem)
+{
+	int i;
+
+	for (i = 0; i < sub_len; i++) {
+		if (subjects[i].semester == sem) return 1;
+	}
+	return -1;
+}
+int find_topsub(mark *marks, subject subjects[], char *subject, int marks_len, int sub_len) //linear search
+{
+	int i, sub_ind, maxm;
+
+	sub_ind = subject_index(subjects, subject, sub_len);
+	if (sub_ind == -1) {
+		printf("invalid subject\n");
+		return -1;
+	}
+	maxm = 0;
+
+	for (i = 1; i < marks_len; i++)
+		if (marks[i].sub_marks[sub_ind] > marks[maxm].sub_marks[sub_ind]) maxm = i;
+	return maxm;
+}
+//**********************************************//
+void find_topsem(mark *marks, subject subjects[], int sem, int marks_len, int sub_len)
+{
+	int i = 0, found_sem;
+
+	found_sem = check_sem(subjects, sub_len, sem);
+	if (found_sem == -1) {
+		printf("invalid sem\n");
+		return;
+	}
+	for (i = 0; i < sub_len; i++) {
+		if(subjects[i].semester == sem)
+			printf("%ld, %s\n", marks[find_topsub(marks, subjects, subjects[i].sub_name, marks_len, sub_len)].misid, subjects[i].sub_name);
+	}
+	return;
+}
 //**********************************************//
 
 int main()
 {
-	int sub_len, marks_len, grade_len, semester;
-	long misid;
-	float cgpa, sgpa;
+	int sub_len, marks_len, grade_len, semester, i;
+	long misid, top;
+	float cgpa, sgpa, std_dev;
 
 	subject subjects[SIZESUB];
 	grade grades[1024];
@@ -413,8 +556,23 @@ int main()
 				misid = atol(data1);
 				print_failed(marks, grades, subjects, misid, marks_len, sub_len);
 				break;
+			case STDEV :
+				scanf("%s", data1);
+				std_dev = stdev(marks, subjects, data1, marks_len, sub_len);
+				if (std_dev > 0) printf("%.2f\n", std_dev);
+				break;
+			case TOPSUB :
+				scanf("%s", data1);
+				top = find_topsub(marks, subjects, data1, marks_len, sub_len);
+				if (top != -1) printf("%ld\n", marks[top].misid);
+				break;
+			case TOPSEM : 
+				scanf("%s", data1);
+				semester = atoi(data1);
+				find_topsem(marks, subjects, semester, marks_len, sub_len);
+				break;
 			case EXIT :
-				for (int i = 0; i < marks_len; i++)
+				for (i = 0; i < marks_len; i++)
 					free(marks[i].sub_marks);
 				return 0;
 			default :
@@ -422,8 +580,9 @@ int main()
 		}
 	}
 
-	for (int i = 0; i < marks_len; i++) {
+	for (i = 0; i < marks_len; i++) {
 		free(marks[i].sub_marks);
 	}
 	return 0;
 }
+
