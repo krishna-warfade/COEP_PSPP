@@ -30,7 +30,8 @@ int myscanf(char *format, void *arg)
 				num = num * 10 + (ch - '0');
 				ch = getchar();
 				i++;
-			}
+			} /*for (num = 0; isdigit(s[i]); i++)
+        			num = 10 * num + (s[i] - '0');*/
 			
 			if (i > 0) {
                 *(int *)p = sign * num;
@@ -39,8 +40,8 @@ int myscanf(char *format, void *arg)
                 return 0;
             }
 			if (ch != EOF) {
-                ungetc(ch, stdin);
-            }
+               			ungetc(ch, stdin);
+            		}
 		} else if (*format == 'u') {
 			ch = getchar();
 
@@ -64,8 +65,8 @@ int myscanf(char *format, void *arg)
 				return 0;
 			}
 			if (ch != EOF) {
-                ungetc(ch, stdin);
-            }
+                		ungetc(ch, stdin);
+            		}
 		} else if (*format == 'c') {
 			ch = getchar();
 			if (ch == EOF) {
@@ -95,8 +96,8 @@ int myscanf(char *format, void *arg)
 			} else
 				return 0;
 			if (ch != EOF) {
-                ungetc(ch, stdin);
-            }
+                		ungetc(ch, stdin);
+            		}
 		} else if (*format == 'l' && *(format + 1) == 'f') {
 			char num[128];
 			int j = 0;
@@ -119,8 +120,8 @@ int myscanf(char *format, void *arg)
 			} else
 				return 0;
 			if (ch != EOF) {
-                ungetc(ch, stdin);
-            }
+                		ungetc(ch, stdin);
+            		}
 		} else if (*format == 's') {
 			char str[1024];
 			int j = 0;
