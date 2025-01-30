@@ -5,6 +5,6 @@ sgpa 612003007 3
 failed 612003007
 topsem 7
 topsub cl
-topnsub dsa 5
+topnsub pspp 5
 stdev os
 exit
