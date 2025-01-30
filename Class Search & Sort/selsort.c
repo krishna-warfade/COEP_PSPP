@@ -1,11 +1,14 @@
 #include <stdio.h>
 #define SIZE 16
+
 struct student {
 	int mis;
 	char name[32];
 	float marks;
 };
+
 typedef struct student student;
+
 void print_records(student a[], int len) {
 	int i;
 	printf("-------------\n");
@@ -13,6 +16,7 @@ void print_records(student a[], int len) {
 		printf("%d %s %.2f\n", a[i].mis,
 			a[i].name, a[i].marks);
 }
+
 /* searches for a record matching 'mis' in the array
  * a[], upto length = len
  * returns the index of the first record found
@@ -27,8 +31,9 @@ int findmin(student a[], int i, int len) {
 			min = a[j].mis;
 			minindex = j;
 		}
-	return minindex;
+		return minindex;
 }
+
 void selsort(student a[], int len) {
 	student t;	
 	int i, min;
@@ -43,6 +48,7 @@ void selsort(student a[], int len) {
 		i++;
 	}
 }
+
 int main() {
 	student a[SIZE];
 	int len = 0;
