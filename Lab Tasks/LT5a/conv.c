@@ -109,14 +109,11 @@ int main()
 
     // Reading input and processing it
     printf("Enter length and unit : ");
-    while (scanf("%lf %c", &value, &unit) == 2)
-    {
-        if (unit == 'f' || unit == 'm' || unit == 'l' || unit == 'i' || unit == 'c' || unit == 'y')
-        {
+    while (scanf("%lf %c", &value, &unit) == 2) {
+        if (unit == 'f' || unit == 'm' || unit == 'l' || unit == 'i' || unit == 'c' || unit == 'y') {
             convert_and_print(value, unit);
         }
-        else
-        {
+        else {
             printf("Invalid unit.\n");
         }
     }
