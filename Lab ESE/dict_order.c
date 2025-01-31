@@ -6,8 +6,8 @@ struct data { char name[16]; int marks; }
 
 Then the program sorts the array of strings using bubble sort., in dictionary order on name.
 
-Then the program prints the structs one after another, one struct on one line each.*/
-
+Then the program prints the structs one after another, one struct on one line each.
+*/
 
 #include <stdio.h>
 #include <string.h>
