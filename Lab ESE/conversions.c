@@ -1,4 +1,5 @@
-/*Write a program that reads weight in pound or ounce or stone and converts it into kg.
+/*
+Write a program that reads weight in pound or ounce or stone and converts it into kg.
 Input possibilities:
 <number> lb
 <number> ou
@@ -10,7 +11,8 @@ use:
 1 stone = 6.35029 kg  
 
 print the answer upto two decimal places.
-Print "0.00 kg" on error in input. */
+Print "0.00 kg" on error in input.
+*/
 
 #include <stdio.h>
 #include <string.h>
@@ -18,7 +20,9 @@ Print "0.00 kg" on error in input. */
 #define POUND 0.453592
 #define STONE 6.35029
 #define SIZE 8
+
 		/*Function to identify from_unit for conversion to_kg*/
+
 int getunit(char *unit)
 {
 	if (strlen(unit) <= 2) {
@@ -45,7 +49,7 @@ int main() {
 		return 1;
 	}
 	scanf("%s", unit);
-	switch(getunit(unit)) {
+	switch(getunit(unit)) { // Used switch-case to improve readibility
 		case 1 :
 			printf("%.2lf kg\n", num * OUNCE);
 			break;
@@ -64,4 +68,3 @@ int main() {
 	}
 	return 0;
 }
-
