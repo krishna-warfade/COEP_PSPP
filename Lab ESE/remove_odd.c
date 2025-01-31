@@ -1,6 +1,10 @@
-/*Write a C function, which given an array of integers, removes all odd numbers from the array, maintaining the order of remaining numbers. The function returns the new length of the array. Assume that all numbes will be >=0
+/*
+Write a C function, which given an array of integers, removes all odd numbers from the array,
+maintaining the order of remaining numbers. The function returns the new length of the array.
+Assume that all numbes will be >=0.
 
-int removeodd(int a[], int len);*/
+int removeodd(int a[], int len);
+*/
 
 #include <stdio.h>
         /*FUNCTION TO CHECK IF ARRAY ELEMENT IS ODD*/
