@@ -233,15 +233,9 @@ int read_marks(char *filename, mark *marks, int sub_len)
         exit(1);
     }
     while (readline(fd, line)) {
-        // Allocate memory for sub_marks and point arrays
+        //allocate memory for sub_marks and point arrays
         marks[i].sub_marks = (double *)malloc(sub_len * sizeof(double));
         marks[i].point = (int *)malloc(sub_len * sizeof(int));
-
-        if (marks[i].sub_marks == NULL || marks[i].point == NULL) {
-            printf("Memory allocation failed for student %d\n", i);
-            exit(1);
-        }
-
         insert_mark(line, marks, i, sub_len);
         i++;
     }
@@ -334,7 +328,7 @@ void print_student_mis_grade(mark *marks, subject subjects[], long mis, char *da
 	mis_ind = mis_index(marks, mis, marks_len);
 	sub_ind = subject_index(subjects, data2, sub_len);
 	assign_grades(marks, mis_ind, sub_ind);
-	if (mis_ind == -1 || sub_ind == -1) printf("----------invalid input------------\n");
+	if (mis_ind == -1 || sub_ind == -1) printf("invalid input\n");
 	printf("\n");
 }
 //**********************************************//
@@ -555,7 +549,6 @@ int main()
 		switch (retval_cmd) {
 			case GRADE :
 				scanf("%s", data1);
-				//printf("parsed data1: '%s'\n", data1);
 				if (strcmp(data1, "all") != 0) {
 					scanf("%s", data2);
 					long mis = atol(data1);
