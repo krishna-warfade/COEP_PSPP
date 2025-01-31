@@ -1,4 +1,5 @@
-/*Write a C program which :
+/*
+Write a C program which :
 
 Reads a sequence of following structs  as input, and stores them in an array. 
 
@@ -38,15 +39,18 @@ int main() {
 
 	struct data data[SIZE];
 			/*TAKE DATA AS INPUT*/
+
 	while (scanf("%s %d", data[i].name, &data[i].marks) == 2)
 		i++;
 	len = i;
+
 			/*BUBBLE SORT on struct data*/
+	
 	sortdata(data, len);
+	
 			/*PRINT THE SORTED DATA*/
-	for (int j = 0; j < len; j++) {
+	
+	for (int j = 0; j < len; j++)
 		printf("%s %d\n", data[j].name, data[j].marks);
-	}
 	return 0;
 }
-
