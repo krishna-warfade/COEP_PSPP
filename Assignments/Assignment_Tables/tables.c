@@ -69,23 +69,20 @@ grade <mis> <subject-name>
 #define SIZESUB 64
 #define	SIZEMARKS 1024
 #define	SIZE 512
-
 typedef struct subject{
 	char sub_name[64];
 	int credits;
 	int semester;
-}subject;
+} subject;
 typedef struct grade{
 	double range[7];
-}grade;
+} grade;
 typedef struct mark{
 	long misid;
 	double *sub_marks;
 	int *point;
-}mark;
-
-enum Commands {GRADE, CGPA, SGPA, FAILED, TOPSEM, TOPSUB, TOPNSUB, STDEV, EXIT};
-
+} mark;
+enum commands {GRADE, CGPA, SGPA, FAILED, TOPSEM, TOPSUB, TOPNSUB, STDEV, EXIT};
 int interpret_cmd(char *cmd);
 void insert_sub(char *line, subject subjects[], int i);
 void insert_grade(char *line, grade grades[], int i);
@@ -105,21 +102,30 @@ void print_failed(mark *marks, grade grades[], subject subjects[], long mis, int
 int credits(subject subjects[], int sub_len, int semester);
 float mean(mark *marks, int sub_len, int sub_ind);
 float rms(mark *marks, int sub_len, int sub_ind);
-float stdev(mark *marks, subject subjects[], char* subject, int marks_len, int sub_len);
+float stdev(mark *marks, subject subjects[], char *subject, int marks_len, int sub_len);
 void find_topsem(mark *marks, subject subjects[], int sem, int marks_len, int sub_len);
 int find_topsub(mark *marks, subject subjects[], char *subject, int marks_len, int sub_len);
 void find_topnsub(mark *marks, subject subjects[], char *subject, int no_of_subj, int marks_len, int sub_len);
-
-int interpret_cmd(char cmd[]) {
-	if (strcmp(cmd, "grade") == 0) return GRADE;
-	if (strcmp(cmd, "cgpa") == 0) return CGPA;
-	if (strcmp(cmd, "sgpa") == 0) return SGPA;
-	if (strcmp(cmd, "failed") == 0) return FAILED;
-	if (strcmp(cmd, "stdev") == 0) return STDEV;
-	if (strcmp(cmd, "topsem") == 0) return TOPSEM;
-	if (strcmp(cmd, "topsub") == 0) return TOPSUB;
-	if (strcmp(cmd, "topnsub") == 0) return TOPNSUB;
-	if (strcmp(cmd, "exit") == 0) return EXIT;
+int interpret_cmd(char cmd[])
+{
+	if (strcmp(cmd, "grade") == 0)
+		return GRADE;
+	if (strcmp(cmd, "cgpa") == 0)
+		return CGPA;
+	if (strcmp(cmd, "sgpa") == 0)
+		return SGPA;
+	if (strcmp(cmd, "failed") == 0)
+		return FAILED;
+	if (strcmp(cmd, "stdev") == 0)
+		return STDEV;
+	if (strcmp(cmd, "topsem") == 0)
+		return TOPSEM;
+	if (strcmp(cmd, "topsub") == 0)
+		return TOPSUB;
+	if (strcmp(cmd, "topnsub") == 0)
+		return TOPNSUB;
+	if (strcmp(cmd, "exit") == 0)
+		return EXIT;
 	return -1;
 }
 int readline(int fd, char *s)
@@ -142,14 +148,14 @@ void insert_sub(char line[], subject subjects[], int i)
 
 	token = strtok(NULL, ",");
 	if (token != NULL)
-		subjects[i].credits = atoi(token);	
+		subjects[i].credits = atoi(token);
 	token = strtok(NULL, ",");
 	if (token != NULL)
 		subjects[i].semester = atoi(token);
 }
-
-int read_subjects(char *filename, subject subjects[]) {
-	int fd, i = 0;
+int read_subjects(char *filename, subject subjects[])
+{
+	int fd, i = 0, j;
 	char line[1024];
 
 	fd = open(filename, O_RDONLY);
@@ -157,11 +163,9 @@ int read_subjects(char *filename, subject subjects[]) {
 		printf("can't open file - subjects.csv\n");
 		exit(1);
 	}
-	while (readline(fd, line)) {
-		/* cut the line into "tokens" separated
-		* on ","
-		* and store each in subjects[i].... 
-		*/
+	while (j = readline(fd, line)) {
+		if (j == 0)
+			continue;
 		insert_sub(line, subjects, i);
 		i++;
 	}
@@ -175,7 +179,6 @@ void insert_grade(char line[], grade grades[], int i)
 	int j = 0;
 
 	token = strtok(line, ",");
-	 
 	grades[i].range[j] = atof(token);
 	j++;
 	while (token != NULL && j < 7) {
@@ -184,10 +187,9 @@ void insert_grade(char line[], grade grades[], int i)
 		j++;
 	}
 }
-
 int read_grades(char *filename, grade grades[], int sub_len)
 {
-	int fd, i = 0;
+	int fd, i = 0, j;
 	char line[SIZE];
 
 	fd = open(filename, O_RDONLY);
@@ -196,7 +198,9 @@ int read_grades(char *filename, grade grades[], int sub_len)
 		exit(1);
 	}
 	while (i < sub_len) {
-		readline(fd, line);
+		j = readline(fd, line);
+		if (j == 0)
+			continue;
 		insert_grade(line, grades, i);
 		i++;
 	}
@@ -206,44 +210,43 @@ int read_grades(char *filename, grade grades[], int sub_len)
 //**********************************************//
 void insert_mark(char line[], mark *marks, int i, int sub_len)
 {
-    char *token;
-    int j = 0;
+	char *token;
+	int j = 0;
 
-    token = strtok(line, ",");
-    if (token != NULL)
-        marks[i].misid = atol(token);
-
-    while (token != NULL && j < sub_len) {
-        token = strtok(NULL, ",");
-        if (token != NULL) {
-            marks[i].sub_marks[j] = atof(token);
-            j++;
-        }
-    }
+	token = strtok(line, ",");
+	if (token != NULL)
+		marks[i].misid = atol(token);
+	while (token != NULL && j < sub_len) {
+		token = strtok(NULL, ",");
+		if (token != NULL) {
+			marks[i].sub_marks[j] = atof(token);
+			j++;
+		}
+	}
 }
-
 int read_marks(char *filename, mark *marks, int sub_len)
 {
-    int fd, i;
-    char line[SIZE];
-    i = 0;
-    fd = open(filename, O_RDONLY);
-    if (fd == -1) {
-        printf("can't open file - grades.csv\n");
-        exit(1);
-    }
-    while (readline(fd, line)) {
-        //allocate memory for sub_marks and point arrays
-        marks[i].sub_marks = (double *)malloc(sub_len * sizeof(double));
-        marks[i].point = (int *)malloc(sub_len * sizeof(int));
-        insert_mark(line, marks, i, sub_len);
-        i++;
-    }
-    close(fd);
-    return i;
+	int fd, i, j;
+	char line[SIZE];
+
+	i = 0;
+	fd = open(filename, O_RDONLY);
+	if (fd == -1) {
+		printf("can't open file - grades.csv\n");
+		exit(1);
+	}
+	while (j = readline(fd, line)) {
+		//allocate memory for sub_marks and point arrays
+		if (j == 0)
+			continue;
+		marks[i].sub_marks = (double *)malloc(sub_len * sizeof(double));
+		marks[i].point = (int *)malloc(sub_len * sizeof(int));
+		insert_mark(line, marks, i, sub_len);
+		i++;
+	}
+	close(fd);
+	return i;
 }
-
-
 //**********************************************//
 int find_point(double sub_marks, grade grades[], int i)
 {
@@ -265,7 +268,6 @@ int find_point(double sub_marks, grade grades[], int i)
 		return 10;
 	}
 }
-
 void assign_points(mark *marks, grade grades[], int sub_len, int marks_len)
 {
 	int i, j;
@@ -276,37 +278,35 @@ void assign_points(mark *marks, grade grades[], int sub_len, int marks_len)
 		}
 	}
 }
-
 void assign_grades(mark *marks, int j, int k)
 {
 	switch (marks[j].point[k]) {
-		case 0 :
-			printf("FF");
-			break;
-		case 4 :
-			printf("DD");
-			break;
-		case 5 :
-			printf("CD");
-			break;
-		case 6 :
-			printf("CC");
-			break;
-		case 7 :
-			printf("BC");
-			break;
-		case 8 :
-			printf("BB");
-			break;
-		case 9 :
-			printf("AB");
-			break;
-		case 10 :
-			printf("AA");
-			break;
+	case 0:
+		printf("FF");
+		break;
+	case 4:
+		printf("DD");
+		break;
+	case 5:
+		printf("CD");
+		break;
+	case 6:
+		printf("CC");
+		break;
+	case 7:
+		printf("BC");
+		break;
+	case 8:
+		printf("BB");
+		break;
+	case 9:
+		printf("AB");
+		break;
+	case 10:
+		printf("AA");
+		break;
 	}
 }
-
 //**********************************************//
 void print_grade_all(mark *marks, int i, int j)
 {
@@ -315,7 +315,8 @@ void print_grade_all(mark *marks, int i, int j)
 	for (p = 0; p < i; p++) {
 		printf("%ld, ", marks[p].misid);
 		for (q = 0; q < j; q++) {
-			if (q) printf(", ");
+			if (q)
+				printf(", ");
 			assign_grades(marks, p, q);
 		}
 		printf("\n");
@@ -328,7 +329,8 @@ void print_student_mis_grade(mark *marks, subject subjects[], long mis, char *da
 	mis_ind = mis_index(marks, mis, marks_len);
 	sub_ind = subject_index(subjects, data2, sub_len);
 	assign_grades(marks, mis_ind, sub_ind);
-	if (mis_ind == -1 || sub_ind == -1) printf("invalid input\n");
+	if (mis_ind == -1 || sub_ind == -1)
+		printf("invalid input\n");
 	printf("\n");
 }
 //**********************************************//
@@ -352,7 +354,6 @@ double find_sgpa(mark *marks, subject subjects[], long mis, int marks_len, int s
 	sgpa = (float)(sum / total_cred);
 	return sgpa;
 }
-
 double find_cgpa(mark *marks, subject subjects[], int sub_len, int marks_len, long mis)
 {
 	int totalCredits = 0, credit;
@@ -361,7 +362,8 @@ double find_cgpa(mark *marks, subject subjects[], int sub_len, int marks_len, lo
 	for (int i = 1; i < 8; i++) {
 		credit = credits(subjects, sub_len, i);//i is the semester which is updated in every iteration
 		sgpa = find_sgpa(marks, subjects, mis, marks_len, sub_len, i);
-		if (sgpa == -1) break;
+		if (sgpa == -1)
+			break;
 		sum += (credit * sgpa);
 		totalCredits += credit;
 	}
@@ -379,7 +381,8 @@ void print_failed(mark *marks, grade grades[], subject subjects[], long mis, int
 		return;
 	}
 	for (i = 0; i < sub_len; i++) {
-		if (marks[found_mis].point[i] == 0) printf("%s ", subjects[i].sub_name);
+		if (marks[found_mis].point[i] == 0)
+			printf("%s ", subjects[i].sub_name);
 	}
 	printf("\n");
 }
@@ -402,28 +405,27 @@ float rms(mark *marks, int marks_len, int sub_ind)
 	rms = sum / marks_len;
 	return rms;
 }
-float stdev(mark *marks, subject subjects[], char* sub, int marks_len, int sub_len)
+float stdev(mark *marks, subject subjects[], char *sub, int marks_len, int sub_len)
 {
 	float stdev = 0.00, mean_value = 0.00, rms_value = 0.00;
 	int sub_ind;
 
 	sub_ind = subject_index(subjects, sub, sub_len);
-	if (sub_ind == -1) printf("invalid subject\n");
+	if (sub_ind == -1)
+		printf("invalid subject\n");
 	rms_value = rms(marks, marks_len, sub_ind);
 	mean_value = mean(marks, marks_len, sub_ind);
 	stdev = sqrt(rms_value - mean_value * mean_value);
 	return stdev;
 }
 //**********************************************//
-int subject_index(subject subjects[], char *subject, int sub_len) {
-	for (int i = 0; i < sub_len; i++) {
-		if (strcmp(subjects[i].sub_name, subject) == 0) {
+int subject_index(subject subjects[], char *subject, int sub_len)
+{
+	for (int i = 0; i < sub_len; i++)
+		if (strcmp(subjects[i].sub_name, subject) == 0)
 			return i;
-		}
-	}
 	return -1;
 }
-
 int mis_index(mark *marks, long misid, int len)
 {
 	int i;
@@ -439,7 +441,8 @@ int credits(subject subjects[], int sub_len, int semester)
 	int i, sum = 0;
 
 	for (i = 0; i < sub_len; i++) {
-		if (subjects[i].semester == semester) sum += subjects[i].credits;
+		if (subjects[i].semester == semester)
+			sum += subjects[i].credits;
 	}
 	return sum;
 }
@@ -448,7 +451,8 @@ int check_sem(subject subjects[], int sub_len, int sem)
 	int i;
 
 	for (i = 0; i < sub_len; i++) {
-		if (subjects[i].semester == sem) return 1;
+		if (subjects[i].semester == sem)
+			return 1;
 	}
 	return -1;
 }
@@ -464,7 +468,8 @@ int find_topsub(mark *marks, subject subjects[], char *subject, int marks_len, i
 	maxm = 0;
 
 	for (i = 1; i < marks_len; i++)
-		if (marks[i].sub_marks[sub_ind] > marks[maxm].sub_marks[sub_ind]) maxm = i;
+		if (marks[i].sub_marks[sub_ind] > marks[maxm].sub_marks[sub_ind])
+			maxm = i;
 	return maxm;
 }
 void find_topnsub(mark *marks, subject subjects[], char *subject, int no_of_subj, int marks_len, int sub_len)
@@ -476,7 +481,8 @@ void find_topnsub(mark *marks, subject subjects[], char *subject, int no_of_subj
 		printf("invalid subject\n");
 		return;
 	}
-	for (i = 0; i < marks_len; i++) index[i] = i;
+	for (i = 0; i < marks_len; i++)
+		index[i] = i;
 	/*SELECTION SORT*/
 	for (i = 0; i < marks_len; i++) {
 		max_ind = i;
@@ -504,13 +510,12 @@ void find_topsem(mark *marks, subject subjects[], int sem, int marks_len, int su
 		return;
 	}
 	for (i = 0; i < sub_len; i++) {
-		if(subjects[i].semester == sem)
+		if (subjects[i].semester == sem)
 			printf("%ld, %s\n", marks[find_topsub(marks, subjects, subjects[i].sub_name, marks_len, sub_len)].misid, subjects[i].sub_name);
 	}
 	return;
 }
 //**********************************************//
-
 int main()
 {
 	int sub_len, marks_len, grade_len, semester, i, no_of_subj;
@@ -534,7 +539,7 @@ int main()
 	}
 	assign_points(marks, grades, sub_len, marks_len);
 	//Take queries as input in cmd
-	
+
 	while (1) {
 		char cmd[SIZE], data1[32], data2[32];
 		int retval_cmd;
@@ -547,69 +552,70 @@ int main()
 			break;
 
 		switch (retval_cmd) {
-			case GRADE :
-				scanf("%s", data1);
-				//printf("parsed data1: '%s'\n", data1);
-				if (strcmp(data1, "all") != 0) {
-					scanf("%s", data2);
-					long mis = atol(data1);
-					print_student_mis_grade(marks, subjects, mis, data2, marks_len, sub_len);
-				} else {
-					print_grade_all(marks, marks_len, sub_len);
-				}
-				break;
-			case CGPA :
-				scanf("%s", data1);
-				misid = atol(data1);
-				cgpa = find_cgpa(marks, subjects, sub_len, marks_len, misid);
-				if (cgpa >= 0) printf("%.2f\n", cgpa);
-				break;
-			case SGPA :
-				scanf("%s", data1);
-				misid = atol(data1);
+		case GRADE:
+			scanf("%s", data1);
+			//printf("parsed data1: '%s'\n", data1);
+			if (strcmp(data1, "all") != 0) {
 				scanf("%s", data2);
-				semester = atoi(data2);
-				sgpa = find_sgpa(marks, subjects, misid, marks_len, sub_len, semester);
-				if (sgpa >= 0) printf("%.2f\n", sgpa);
-				break;
-			case FAILED :
-				scanf("%s", data1);
 				misid = atol(data1);
-				print_failed(marks, grades, subjects, misid, marks_len, sub_len);
-				break;
-			case STDEV :
-				scanf("%s", data1);
-				std_dev = stdev(marks, subjects, data1, marks_len, sub_len);
-				if (std_dev > 0) printf("%.2f\n", std_dev);
-				break;
-			case TOPSUB :
-				scanf("%s", data1);
-				top = find_topsub(marks, subjects, data1, marks_len, sub_len);
-				if (top != -1) printf("%ld\n", marks[top].misid);
-				break;
-			case TOPSEM : 
-				scanf("%s", data1);
-				semester = atoi(data1);
-				find_topsem(marks, subjects, semester, marks_len, sub_len);
-				break;
-			case TOPNSUB :
-				scanf("%s", data1);//subject
-				scanf("%s", data2);
-				no_of_subj = atoi(data2);
-				find_topnsub(marks, subjects, data1, no_of_subj, marks_len, sub_len);
-				break;
-			case EXIT :
-				for (i = 0; i < marks_len; i++)
-					free(marks[i].sub_marks);
-				return 0;
-			default :
-				printf("invalid command\n");
+				print_student_mis_grade(marks, subjects, misid, data2, marks_len, sub_len);
+			} else {
+				print_grade_all(marks, marks_len, sub_len);
+			}
+			break;
+		case CGPA:
+			scanf("%s", data1);
+			misid = atol(data1);
+			cgpa = find_cgpa(marks, subjects, sub_len, marks_len, misid);
+			if (cgpa >= 0)
+				printf("%.2f\n", cgpa);
+			break;
+		case SGPA:
+			scanf("%s", data1);
+			misid = atol(data1);
+			scanf("%s", data2);
+			semester = atoi(data2);
+			sgpa = find_sgpa(marks, subjects, misid, marks_len, sub_len, semester);
+			if (sgpa >= 0)
+				printf("%.2f\n", sgpa);
+			break;
+		case FAILED:
+			scanf("%s", data1);
+			misid = atol(data1);
+			print_failed(marks, grades, subjects, misid, marks_len, sub_len);
+			break;
+		case STDEV:
+			scanf("%s", data1);
+			std_dev = stdev(marks, subjects, data1, marks_len, sub_len);
+			if (std_dev > 0)
+				printf("%.2f\n", std_dev);
+			break;
+		case TOPSUB:
+			scanf("%s", data1);
+			top = find_topsub(marks, subjects, data1, marks_len, sub_len);
+			if (top != -1)
+				printf("%ld\n", marks[top].misid);
+			break;
+		case TOPSEM:
+			scanf("%s", data1);
+			semester = atoi(data1);
+			find_topsem(marks, subjects, semester, marks_len, sub_len);
+			break;
+		case TOPNSUB:
+			scanf("%s", data1);//subject
+			scanf("%s", data2);
+			no_of_subj = atoi(data2);
+			find_topnsub(marks, subjects, data1, no_of_subj, marks_len, sub_len);
+			break;
+		case EXIT:
+			for (i = 0; i < marks_len; i++)
+				free(marks[i].sub_marks);
+			return 0;
+		default:
+			printf("invalid command\n");
 		}
 	}
-
-	for (i = 0; i < marks_len; i++) {
+	for (i = 0; i < marks_len; i++)
 		free(marks[i].sub_marks);
-	}
 	return 0;
 }
-
