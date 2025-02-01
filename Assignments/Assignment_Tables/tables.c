@@ -554,7 +554,6 @@ int main()
 		switch (retval_cmd) {
 		case GRADE:
 			scanf("%s", data1);
-			//printf("parsed data1: '%s'\n", data1);
 			if (strcmp(data1, "all") != 0) {
 				scanf("%s", data2);
 				misid = atol(data1);
