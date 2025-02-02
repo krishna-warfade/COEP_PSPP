@@ -5,18 +5,14 @@ int main()
 
 	scanf("%d %d", &n1, &n2);
 	int max = n1;
-
 	int min = n2;
 
-	if (n2 > max)
-	{
+	if (n2 > max) {
 		max = n2;
 		min = n1;
 	}
-	while (curr <= max)
-	{
-		if (min == prev && max == curr)
-		{
+	while (curr <= max) {
+		if (min == prev && max == curr)	{
 			printf("yes\n");
 			return 0;
 		}
@@ -24,8 +20,7 @@ int main()
 		prev = curr;
 		curr = next;
 	}
-	if (min != prev || max != curr)
-	{
+	if (min != prev || max != curr)	{
 		printf("no\n");
 		return 0;
 	}
