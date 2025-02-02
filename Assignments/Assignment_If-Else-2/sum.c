@@ -1,10 +1,10 @@
 /*
 Sum of (1/n) terms
 */
+
 #include <stdio.h>
 
-int main()
-{
+int main() {
 	float terms, sum = 0, n = 1, i = 0;
 
 	scanf("%f", &terms);
