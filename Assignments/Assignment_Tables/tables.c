@@ -1,3 +1,101 @@
+/*
+Given three CSV files, named as
+subjects.csv
+
+    containing entries in this format:
+subject-name, no-of-credits, semester
+    For example, an entry like
+        dsgt, 3, 2
+    means, that subject dsgt has 3 credits and is offered in 2nd semester.
+
+    Lets say this file has 'N' entries
+
+grades.csv  containint 'N' entries specifiying the grade ranges of marks of students in each subject,
+            in the same order as they appear in subjects.csv
+            each row contains 6 nos, they are upper bounds on the marks for a grade (starting with grade point 4)
+            Consider the lower bound for lowest(first) grade is 0,
+            and upper bound for last grade is 100.
+            Entries can be real numbers
+
+            So an entry like this
+            36,51,54,59,60,77, 88
+            means
+            FF grade(0 pts) range is 0-36.00
+            DD grade(4 pts) range is 36.01-51.00
+            CD grade(5 pts) range is 51.01-54.00
+            CC grade(6 pts) range is 54.01-59.00
+            BC grade(7 pts) range is 59.01-60.00
+            BB grade(8 pts) range is 60.01-77.00
+            AB grade(9 pts) range is 77.01-88.00
+            AA grade(10 pts) range is 88.01-100.00
+marks.csv
+    List of students, with their marks in the 'N' subjects in that order.
+
+Write a program that
+
+    reads the data from these 3 files, assuming they are in the CWD
+    displays a prompt (that looks like this: ">") and then accepts a particular query and answers it. The queries are explained below
+
+   grade <mis> <subject-name>
+        e.g.
+       grade 11122312  os
+        Give the grade of the student specified by MIS id in <mis> for the subject in <subject-name>
+
+
+   grade all
+        Print the list of all students with grades in each subject, in CSV format
+        e.g. output will look like this
+        111212121, AA, BB, CC, DD, FF, AB, BC, BB, AB, AB
+        111212321, AB, BC, BC, CD, BB, AB, BC, BB, AB, BC
+        111211121, AB, BC, CD, DD, AB, BB, CC, BC, AB, AB
+
+
+    cgpa <mis>
+        e.g.
+        cgpa 11232132
+        Calculates and prints the CGPA of a student
+
+
+    sgpa  <MIS>  <sem>
+        e.g.
+   sgpa  1101010101 3
+        Calculates and prints the SGPA of a student in a given semester
+
+
+   failed  <mis>
+        Lists all subject names in which the student given by <mis> has failed
+
+  topsem  <sem>
+  Eg.
+  topsem 3
+  Lists the topmost student, in each subject, in semester 3, in this format:
+  112312321, pspp
+  123123123, os
+  123212321, dsa
+
+  topsub  <subject>
+  Eg.
+  topsub dsa
+  Lists the topper student MIS ID, in given subject,
+  112312321
+
+  topnsub  <sub> <n>
+  Eg.
+  topnsub pspp 5
+  Lists the topmost 5 students, in pspp subject, with marks in ascending order
+  112312321, 11.11
+  123123123, 123.23
+  123212321, 123.45
+
+   failed  <mis>
+        Lists all subject names in which the student given by <mis> has failed
+
+   stdev  <subject>
+       prints the standard deviation of marks in the given subject, as a floating point upto 2 decimals
+
+  exit
+       stop the program
+*/
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
