@@ -1,4 +1,3 @@
-./a.out
 grade all
 grade 612003007 pspp
 cgpa 612003007
