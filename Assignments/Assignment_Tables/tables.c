@@ -654,4 +654,3 @@ int main()
 		free(marks[i].sub_marks);
 	return 0;
 }
-
