@@ -1,0 +1,11 @@
+grade 612003007 pspp
+grade all                                              
+cgpa 612003007
+sgpa 612003007 3
+failed 612003007
+topsem 7
+topsub cl
+topnsub pspp 6
+stdev dsa
+exit
+
