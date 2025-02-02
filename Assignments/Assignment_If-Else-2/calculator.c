@@ -5,8 +5,7 @@ int main()
     int op1, op2, ans, x;
     char opr1, opr2;
 
-    while (1)
-    {
+    while (1) {
         x = scanf("%d", &op1);
         if (x == EOF) {
             break;
@@ -20,8 +19,7 @@ int main()
             return 0;
         }
         if (opr1 == '<' || opr1 == '>') {
-            if (scanf(" %c", &opr2) != 1)
-            {
+            if (scanf(" %c", &opr2) != 1) {
                 printf("bad opr2\n");
                 return 0;
             }
@@ -30,8 +28,7 @@ int main()
             printf("bad op2\n");
             return 0;
         }
-        switch (opr1)
-        {
+        switch (opr1) {
         case '+':
             ans = op1 + op2;
             break;
