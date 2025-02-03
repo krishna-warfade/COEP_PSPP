@@ -1,3 +1,5 @@
+//cos(x) = 1 - x ^ 2 / 2! + x ^ 4 / 4! - x ^ 6 / 6! + ...
+
 #include <stdio.h>
 #include <math.h>
 #define PI 3.14159265359
