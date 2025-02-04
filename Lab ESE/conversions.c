@@ -50,19 +50,19 @@ int main() {
 	}
 	scanf("%s", unit);
 	switch(getunit(unit)) { // Used switch-case to improve readibility
-		case 1 :
+	case 1:
 			printf("%.2lf kg\n", num * OUNCE);
 			break;
-		case 2 :
+	case 2:
 			printf("%.2lf kg\n", num * POUND);
 			break;
-		case 3 :
+	case 3:
 			printf("%.2lf kg\n", num * STONE);
 			break;
-		case -1 :
+	case -1:
 			printf("0.00 kg\n");
 			break;
-		default :
+	default:
 			printf("0.00 kg\n");
 			break;
 	}
