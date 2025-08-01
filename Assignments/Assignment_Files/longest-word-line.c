@@ -38,11 +38,20 @@ int main()
 
 	scanf("%s", filename);
 	fd = open(filename, O_RDONLY);
+	
+	/* FILE *fp;
+ 	   fp = fopen("filename", "r");
+ 	*/
+	
 	if (fd == -1) {
 		printf("open failed\n");
 		return 1;
 	}
 	while (read(fd, &ch, 1)) {
+
+		/* while( fgetc(ch, 1, fp) ) OR while( fgets(s, 80, fp) )
+  		*/
+		
 		if (ch == '\n') {
 			line[i] = '\0';
 			len_word = max_w_line(line);
