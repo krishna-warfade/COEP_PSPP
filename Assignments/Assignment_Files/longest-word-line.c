@@ -49,7 +49,8 @@ int main()
 	}
 	while (read(fd, &ch, 1)) {
 
-		/* while( fgetc(ch, 1, fp) ) OR while( fgets(s, 80, fp) )
+		/* while (ch = fgetc(fp)) -Loop through file char-by-char, stops at every call.
+  		 * while (fgets(s, n, fp)) -Read strings/lines from a file, stops at \n or EOF(n includes \0).
   		*/
 		
 		if (ch == '\n') {
