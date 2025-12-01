@@ -6,7 +6,7 @@ This repository contains a collection of Assignments, Lab Tasks, and End-Semeste
 
 The code is written in **C**.
 
-## 📂 Repository Structure
+## Repository Structure
 
 The main sections of the repository are:
 
@@ -23,7 +23,7 @@ The main sections of the repository are:
 ### 3. Lab End Semester Examination (Lab ESE)
 - Contains questions and solutions for the Lab End Semester Examination.
 
-## 🚀 How to Use
+## How to Use
 
 1.  Clone the repository:
     ```bash
@@ -36,7 +36,7 @@ The main sections of the repository are:
     ./output
     ```
 
-## 📝 Note
+## Note
 This repository serves as a record of my work during the PSPP course.
 
 ## Author
